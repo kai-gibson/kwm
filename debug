@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Setup xephyr
+export DISPLAY=:0
+Xephyr :1 -br -ac -screen 800x600 &
+export DISPLAY=:1
+unset XDG_SEAT
+
+make && gdb ./dwm
+
+

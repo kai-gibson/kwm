@@ -41,6 +41,7 @@
 #endif /* XINERAMA */
 #include <X11/Xft/Xft.h>
 #include <X11/XKBlib.h>
+#include <iostream>
 
 #include "drw.h"
 #include "util.h"
@@ -57,6 +58,7 @@
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
+#define UNUSED(X)               (void)X
 
 /* enums */
 /* enums are used this to define const int's without inst. a var */
@@ -68,8 +70,6 @@ enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
 enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
 enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
        ClkClientWin, ClkRootWin, ClkLast }; /* clicks */
-
-auto c = SchemeNorm;
 
 typedef union {
 	int i;
@@ -1029,6 +1029,23 @@ grabbuttons(Client *c, int focused)
 	}
 }
 
+
+//void grabkeys() {
+//    updatenumlockmask();
+//    const std::array<uint, 4> modifiers{0, LockMask, numlockmask,
+//                                        numlockmask | LockMask};
+//    XUngrabKey(dpy, AnyKey, AnyModifier, root);
+//
+//    for (const auto& key : keys) {
+//        if (const auto code = XKeysymToKeycode(dpy, key.keysym); code) {
+//            for (const auto& modifier : modifiers) {
+//                XGrabKey(dpy, code, key.mod | modifier, root, True,
+//                         GrabModeAsync, GrabModeAsync);
+//            }
+//        }
+//    }
+//}
+
 void
 grabkeys(void)
 {
@@ -1042,10 +1059,13 @@ grabkeys(void)
 		XUngrabKey(dpy, AnyKey, AnyModifier, root);
 		XDisplayKeycodes(dpy, &start, &end);
 		syms = XGetKeyboardMapping(dpy, start, end - start + 1, &skip);
-		if (!syms)
+
+		if (!syms) {
 			return;
-		for (k = start; (int)k <= end; k++)
-			for (i = 0; i < LENGTH(keys); i++)
+        }
+
+		for (k = start; (int)k <= end; k++) {
+			for (i = 0; i < LENGTH(keys); i++) {
 				/* skip modifier codes, we do that ourselves */
 				if (keys[i].keysym == syms[(k - start) * skip])
 					for (j = 0; j < LENGTH(modifiers); j++)
@@ -1053,6 +1073,9 @@ grabkeys(void)
 							 keys[i].mod | modifiers[j],
 							 root, True,
 							 GrabModeAsync, GrabModeAsync);
+            }
+        }
+
 		XFree(syms);
 	}
 }
@@ -1097,9 +1120,10 @@ keypress(XEvent *e)
 			keys[i].func(&(keys[i].arg));
 }
 
-void
-killclient(const Arg *arg)
+void killclient(const Arg *arg)
 {
+    UNUSED(arg);
+
 	if (!selmon->sel)
 		return;
 	if (!sendevent(selmon->sel, wmatom[WMDelete])) {
@@ -1227,9 +1251,9 @@ motionnotify(XEvent *e)
 	mon = m;
 }
 
-void
-movemouse(const Arg *arg)
+void movemouse(const Arg *arg)
 {
+    UNUSED(arg);
 	int x, y, ocx, ocy, nx, ny;
 	Client *c;
 	Monitor *m;
@@ -1340,9 +1364,9 @@ propertynotify(XEvent *e)
 	}
 }
 
-void
-quit(const Arg *arg)
+void quit(const Arg *arg)
 {
+    UNUSED(arg);
 	running = 0;
 }
 
@@ -1381,10 +1405,9 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	configure(c);
 	XSync(dpy, False);
 }
-
-void
-resizemouse(const Arg *arg)
+void resizemouse(const Arg *arg)
 {
+    UNUSED(arg);
 	int ocx, ocy, nw, nh;
 	Client *c;
 	Monitor *m;
@@ -1797,18 +1820,20 @@ tile(Monitor *m)
 		}
 }
 
-void
-togglebar(const Arg *arg)
+void togglebar(const Arg *arg)
 {
+    UNUSED(arg);
+
 	selmon->showbar = !selmon->showbar;
 	updatebarpos(selmon);
 	XMoveResizeWindow(dpy, selmon->barwin, selmon->wx, selmon->by, selmon->ww, bh);
 	arrange(selmon);
 }
 
-void
-togglefloating(const Arg *arg)
+void togglefloating(const Arg *arg)
 {
+    UNUSED(arg);
+
 	if (!selmon->sel)
 		return;
 	if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
@@ -1904,11 +1929,19 @@ void
 updatebars(void)
 {
 	Monitor *m;
+    /*
 	XSetWindowAttributes wa = {
 		.background_pixmap = ParentRelative,
 		.event_mask = ButtonPressMask|ExposureMask,
 		.override_redirect = True
 	};
+    */
+    XSetWindowAttributes wa;
+
+    wa.background_pixmap = ParentRelative;
+    wa.event_mask = ButtonPressMask|ExposureMask;
+    wa.override_redirect = True;
+
 	//XClassHint ch = {"dwm", "dwm"};
     XClassHint* ch = XAllocClassHint();
 	for (m = mons; m; m = m->next) {
@@ -2199,24 +2232,25 @@ xerror(Display *dpy, XErrorEvent *ee)
 	return xerrorxlib(dpy, ee); /* may call exit */
 }
 
-int
-xerrordummy(Display *dpy, XErrorEvent *ee)
+int xerrordummy(Display *dpy, XErrorEvent *ee)
 {
+    UNUSED(dpy); UNUSED(ee);
 	return 0;
 }
 
 /* Startup Error handler to check if another window manager
  * is already running. */
-int
-xerrorstart(Display *dpy, XErrorEvent *ee)
+int xerrorstart(Display *dpy, XErrorEvent *ee)
 {
+    UNUSED(dpy); UNUSED(ee);
+
 	die("dwm: another window manager is already running");
 	return -1;
 }
 
-void
-zoom(const Arg *arg)
+void zoom(const Arg *arg)
 {
+    UNUSED(arg);
 	Client *c = selmon->sel;
 
 	if (!selmon->lt[selmon->sellt]->arrange || !c || c->isfloating)
