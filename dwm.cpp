@@ -61,7 +61,7 @@
 #define UNUSED(X)               (void)X
 
 /* enums */
-/* enums are used this to define const int's without inst. a var */
+/* enums are used like this to define const int's without inst. a var */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
@@ -1046,8 +1046,7 @@ grabbuttons(Client *c, int focused)
 //    }
 //}
 
-void
-grabkeys(void)
+void grabkeys(void)
 {
 	updatenumlockmask();
 	{
@@ -1107,11 +1106,8 @@ keypress(XEvent *e)
 	XKeyEvent *ev;
 
 	ev = &e->xkey;
-    /*
-    mykey = XkbKeycodeToKeysym( display, event.xkey.keycode, 
-                                0, event.xkey.state & ShiftMask ? 1 : 0);
-    */
-	keysym = XkbKeycodeToKeysym(dpy, (KeyCode)ev->keycode, 0, ev->state & ShiftMask ? 1 : 0);
+    //ev->state & ShiftMask ? 1 : 0
+	keysym = XkbKeycodeToKeysym(dpy, (KeyCode)ev->keycode, 0, 0);
 	//keysym = XKeycodeToKeysym(dpy, (KeyCode)ev->keycode, 0); //orig
 	for (i = 0; i < LENGTH(keys); i++)
 		if (keysym == keys[i].keysym
@@ -1477,25 +1473,27 @@ restack(Monitor *m)
 	if (m->lt[m->sellt]->arrange) {
 		wc.stack_mode = Below;
 		wc.sibling = m->barwin;
-		for (c = m->stack; c; c = c->snext)
+		for (c = m->stack; c; c = c->snext) {
 			if (!c->isfloating && ISVISIBLE(c)) {
 				XConfigureWindow(dpy, c->win, CWSibling|CWStackMode, &wc);
 				wc.sibling = c->win;
 			}
+        }
 	}
 	XSync(dpy, False);
 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
 }
 
-void
-run(void)
+void run(void)
 {
 	XEvent ev;
 	/* main event loop */
 	XSync(dpy, False);
-	while (running && !XNextEvent(dpy, &ev))
-		if (handler[ev.type])
+	while (running && !XNextEvent(dpy, &ev)) {
+		if (handler[ev.type]) {
 			handler[ev.type](&ev); /* call handler */
+        }
+    }
 }
 
 void
@@ -1514,11 +1512,13 @@ scan(void)
 				manage(wins[i], &wa);
 		}
 		for (i = 0; i < num; i++) { /* now the transients */
-			if (!XGetWindowAttributes(dpy, wins[i], &wa))
+			if (!XGetWindowAttributes(dpy, wins[i], &wa)) {
 				continue;
-			if (XGetTransientForHint(dpy, wins[i], &d1)
-			&& (wa.map_state == IsViewable || getstate(wins[i]) == IconicState))
+            }
+			if (XGetTransientForHint(dpy, wins[i], &d1) 
+			&& (wa.map_state == IsViewable || getstate(wins[i]) == IconicState)) {
 				manage(wins[i], &wa);
+            }
 		}
 		if (wins)
 			XFree(wins);
@@ -2260,8 +2260,7 @@ void zoom(const Arg *arg)
 	pop(c);
 }
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	if (argc == 2 && !strcmp("-v", argv[1]))
 		die("dwm-" VERSION);
