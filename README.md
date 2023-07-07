@@ -2,6 +2,9 @@
 -------------------------------
 A fork of dwm rewritten in c++. Geared towards safety and simplicity.
 
+![pic](https://github.com/kai-gibson/kwm/blob/master/kwm.jpg?raw=true)
+
+
 
 
 ## Requirements
