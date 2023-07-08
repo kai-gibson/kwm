@@ -540,12 +540,14 @@ buttonpress(XEvent *e)
 		if (i < LENGTH(tags)) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
-		} else if (ev->x < (int)(x + TEXTW(selmon->ltsymbol)))
-			click = ClkLtSymbol;
-		else if (ev->x > selmon->ww - (int)TEXTW(stext))
-			click = ClkStatusText;
-		else
-			click = ClkWinTitle;
+		} 
+        // commenting out to remove layout and window titles
+        //else if (ev->x < (int)(x + TEXTW(selmon->ltsymbol)))
+		//	click = ClkLtSymbol;
+		//else if (ev->x > selmon->ww - (int)TEXTW(stext))
+		//	click = ClkStatusText;
+		//else
+		//	click = ClkWinTitle;
 	} else if ((c = wintoclient(ev->window))) {
 		focus(c);
 		restack(selmon);
@@ -842,10 +844,11 @@ drawbar(Monitor *m)
 
 		x += w;
 	}
-	w = TEXTW(m->ltsymbol);
-	//drw_setscheme(drw, scheme[SchemeNorm]);
-    drw_setscheme(drw, scheme[SchemeTagsNorm]);
-	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+    // Commenting out to remove layout symbol
+	//w = TEXTW(m->ltsymbol);
+	////drw_setscheme(drw, scheme[SchemeNorm]);
+    //drw_setscheme(drw, scheme[SchemeTagsNorm]);
+	//x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
 	if ((w = m->ww - tw - x) > bh) {
 		if (m->sel) {
