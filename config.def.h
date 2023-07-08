@@ -8,11 +8,11 @@ static const int topbar             = 1;        /* 0 means bottom bar */
 //static const char *fonts[]          = { "monospace:size=10" };
 static const char *fonts[]               = { "Sf Pro:size=10", "antialias=true:autohint=true"};
 static const char dmenufont[]       = "Sf Pro:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
+static const char col_gray1[]       = "#1f1e23"; // bg norm
+static const char col_gray2[]       = "#444444"; // border norm
+static const char col_gray3[]       = "#c0d5a0"; // fg norm
+static const char col_gray4[]       = "#1f1e23"; // fg sel
+static const char col_cyan[]        = "#c0d5a0"; // bg sel & border sel
 static const unsigned int baralpha = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
