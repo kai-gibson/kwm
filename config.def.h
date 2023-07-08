@@ -8,18 +8,36 @@ static const int topbar             = 1;        /* 0 means bottom bar */
 //static const char *fonts[]          = { "monospace:size=10" };
 static const char *fonts[]               = { "Sf Pro:size=10", "antialias=true:autohint=true"};
 static const char dmenufont[]       = "Sf Pro:size=10";
-static const char col_gray1[]       = "#1f1e23"; // bg norm
-static const char col_gray2[]       = "#444444"; // border norm
-static const char col_gray3[]       = "#c0d5a0"; // fg norm
-static const char col_gray4[]       = "#1f1e23"; // fg sel
-static const char col_cyan[]        = "#c0d5a0"; // bg sel & border sel
+
+static char normfgcolor[]                = "#c0d5a0";
+static char normbgcolor[]                = "#1f1e23";
+static char normbordercolor[]            = "#444444";
+
+static char selfgcolor[]                 = "#1f1e23";
+static char selbgcolor[]                 = "#c0d5a0";
+static char selbordercolor[]             = "#c0d5a0";
+
+static char tagsnormfgcolor[]            = "#f1c48e";
+static char tagsnormbgcolor[]            = "#1f1e23";
+//static char tagsnormbordercolor[]        = "#444444";
+
+static char tagsselfgcolor[]             = "#1f1e23";
+static char tagsselbgcolor[]             = "#c0d5a0";
+//static char tagsselbordercolor[]         = "#c0d5a0";
+
 static const unsigned int baralpha = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
-/*    fg         bg         border */
-    { col_gray3, col_gray1, col_gray2 }, /* SchemeNorm */
-    { col_gray4, col_cyan,  col_cyan },  /* SchemeSel */
+    /*    fg               bg             border        */
+    { normfgcolor,    normbgcolor,    normbordercolor    },      /* SchemeNorm */
+    { selfgcolor,     selbgcolor,     selbordercolor     },      /* SchemeSel  */
+    { normfgcolor,    normbgcolor,    "#000000"          },      /* Statusbar */ 
+    { tagsselfgcolor,     tagsselbgcolor,     "#000000"          },      /* Tagbar left sel  */
+    { tagsnormfgcolor,    tagsnormbgcolor,    "#000000"          },      /* Tagbar left norm */ 
+    { selfgcolor,     selbgcolor,     "#000000"          },      /* Infobar middle sel */
+    { normfgcolor,    normbgcolor,    "#000000"          },      /* Infobar middle norm*/
 };
+
 static const unsigned int alphas[][3]      = {
 /*    fg      bg        border */
     { OPAQUE, baralpha, borderalpha }, /* SchemeNorm */
@@ -77,7 +95,10 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+
+static const char *dmenucmd[] = { "dmenu_run", "-c", "-l", "10", "-F", "-i", NULL };
+
+//static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 static const Key keys[] = {
@@ -133,4 +154,3 @@ static const Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
