@@ -106,9 +106,14 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 
 static const char *dmenucmd[] = { "dmenu_run", "-c", "-l", "10", "-F", "-i", NULL };
-
-//static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *brightUp[]    = { "bash", "/home/kai/.local/bin/bright", "+", NULL };
+static const char *brightDown[]  = { "bash", "/home/kai/.local/bin/bright", "-", NULL };
+static const char *upVol[]       = { "amixer", "set", "Master", "10+",       NULL };
+static const char *downVol[]     = { "amixer", "set", "Master", "10-",       NULL };
+static const char *muteVol[]     = { "bash", "/home/kai/.config/scripts/toggleMute.sh",  NULL };
+static const char *emoji[]       = { "bash", "/home/kai/.local/bin/dmenuunicode", "i", NULL };
+static const char *slock[]       = { "slock", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -136,6 +141,14 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_l,                       spawn,     {.v = slock } },
+	{ MODKEY,                       XK_grave,      spawn,              {.v = emoji } },
+    // Media keys
+	{ 0,                            XF86XK_MonBrightnessUp,     spawn,     {.v = brightUp } },
+	{ 0,                            XF86XK_MonBrightnessDown,   spawn,     {.v = brightDown } },
+	{ 0,                            XF86XK_AudioLowerVolume,    spawn,     {.v = downVol } },
+	{ 0,                            XF86XK_AudioRaiseVolume,    spawn,     {.v = upVol } },
+	{ 0,                            XF86XK_AudioMute,           spawn,     {.v = muteVol } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
