@@ -6,6 +6,7 @@ Xephyr :1 -br -ac -screen 800x600 &
 export DISPLAY=:1
 unset XDG_SEAT
 
+rm config.h
 make && gdb ./dwm
 
 
