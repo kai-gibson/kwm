@@ -593,8 +593,9 @@ buttonpress(XEvent *e)
 		else if (ev->x > selmon->ww - (int)(TEXTW(stext) - getsystraywidth())) {
 			click = ClkStatusText;
         }
-		//else
-		//	click = ClkWinTitle;
+		//else {
+		//    click = ClkWinTitle;
+        //}
 
         // commenting out to remove layout and window titles
         //else if (ev->x < (int)(x + TEXTW(selmon->ltsymbol)))
@@ -1174,7 +1175,7 @@ gettextprop(Window w, Atom atom, char *text, unsigned int size)
 	if (!text || size == 0)
 		return 0;
 	text[0] = '\0';
-	if (!XGetTextProperty(dpy, w, &name, atom) || !name.nitems)
+	if (!XGetTextProperty(dpy, w, &name, atom) || !name.nitems) // Breaks on this call, idk why
 		return 0;
 	if (name.encoding == XA_STRING) {
 		strncpy(text, (char *)name.value, size - 1);
@@ -2538,8 +2539,9 @@ updatesizehints(Client *c)
 void
 updatestatus(void)
 {
-	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
+	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext))) {
 		strcpy(stext, "dwm-" VERSION);
+    }
 	drawbar(selmon);
 	updatesystray();
 }
