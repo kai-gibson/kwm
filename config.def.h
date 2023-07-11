@@ -3,7 +3,7 @@
 #include <X11/XF86keysym.h>
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
@@ -58,15 +58,15 @@ static const unsigned int alphas[][3]      = {
 /*    fg      bg        border */
     { OPAQUE, baralpha, borderalpha }, /* SchemeNorm */
 	{ OPAQUE, baralpha, borderalpha }, /* SchemeSel */
+    { OPAQUE, baralpha, borderalpha },  /* Statusbar */ 
+    { OPAQUE, baralpha, borderalpha },  /* Tagbar left sel  */
+    { OPAQUE, baralpha, borderalpha },  /* Tagbar left norm */ 
+    { OPAQUE, baralpha, borderalpha },  /* Infobar middle sel */
+    { OPAQUE, baralpha, borderalpha },  /* Infobar middle norm*/
 };
 
 /* tagging */
 static const char *tags[] = { "www", "note", "dev", "code", "chat", "mp3", "var", "etc" };
-
-static const unsigned int ulinepad	= 5;	/* horizontal padding between the underline and tag */
-static const unsigned int ulinestroke	= 2;	/* thickness / height of the underline */
-static const unsigned int ulinevoffset	= 0;	/* how far above the bottom of the bar the line should appear */
-static const int ulineall 		= 0;	/* 1 to show underline on all tags, 0 for just the active ones */
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -74,8 +74,10 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Brave",    NULL,       NULL,       1 << 0,       0,           -1 },
+	{ "Logseq",   NULL,       NULL,       1 << 1,       0,           -1 },
+	{ "Discord",  NULL,       NULL,       1 << 3,       0,           -1 },
+	{ "st",       NULL,       NULL,       1 << 2,       0,           -1 },
 };
 
 /* layout(s) */
