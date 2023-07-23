@@ -706,19 +706,31 @@ clientmessage(XEvent *e)
 			updatesystrayicongeom(c, wa.width, wa.height);
 			XAddToSaveSet(dpy, c->win);
 			XSelectInput(dpy, c->win, StructureNotifyMask | PropertyChangeMask | ResizeRedirectMask);
-			XReparentWindow(dpy, c->win, systray->win, 0, 0);
-			/* use parents background color */
-			swa.background_pixel  = scheme[SchemeNorm][ColBg].pixel;
-			XChangeWindowAttributes(dpy, c->win, CWBackPixel, &swa);
-			sendevent(c->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_EMBEDDED_NOTIFY, 0 , systray->win, XEMBED_EMBEDDED_VERSION);
-			/* FIXME not sure if I have to send these events, too */
-			sendevent(c->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_FOCUS_IN, 0 , systray->win, XEMBED_EMBEDDED_VERSION);
-			sendevent(c->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_WINDOW_ACTIVATE, 0 , systray->win, XEMBED_EMBEDDED_VERSION);
-			sendevent(c->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_MODALITY_ON, 0 , systray->win, XEMBED_EMBEDDED_VERSION);
-			XSync(dpy, False);
-			resizebarwin(selmon);
-			updatesystray();
-			setclientstate(c, NormalState);
+
+            char ch_vals[] = "dwmsystray";
+            XClassHint ch = {ch_vals, ch_vals};                                                                                                      
+            XSetClassHint(dpy, c->win, &ch);
+            XReparentWindow(dpy, c->win, systray->win, 0, 0);
+            /* use parents background color */
+            swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
+            XChangeWindowAttributes(dpy, c->win, CWBackPixel, &swa);
+            sendevent(c->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_EMBEDDED_NOTIFY, 0 , systray->win, XEMBED_EMBEDDED_VERSION);           
+            XSync(dpy, False);                                                                                                                                 
+            setclientstate(c, NormalState);                                                                                                                    
+            // Orig
+			//XReparentWindow(dpy, c->win, systray->win, 0, 0);
+			///* use parents background color */
+			//swa.background_pixel  = scheme[SchemeNorm][ColBg].pixel;
+			//XChangeWindowAttributes(dpy, c->win, CWBackPixel, &swa);
+			//sendevent(c->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_EMBEDDED_NOTIFY, 0 , systray->win, XEMBED_EMBEDDED_VERSION);
+			///* FIXME not sure if I have to send these events, too */
+			//sendevent(c->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_FOCUS_IN, 0 , systray->win, XEMBED_EMBEDDED_VERSION);
+			//sendevent(c->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_WINDOW_ACTIVATE, 0 , systray->win, XEMBED_EMBEDDED_VERSION);
+			//sendevent(c->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_MODALITY_ON, 0 , systray->win, XEMBED_EMBEDDED_VERSION);
+			//XSync(dpy, False);
+			//resizebarwin(selmon);
+			//updatesystray();
+			//setclientstate(c, NormalState);
 		}
 		return;
 	}

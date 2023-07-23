@@ -140,7 +140,14 @@ xfont_create(Drw *drw, const char *fontname, FcPattern *fontpattern)
 	font = (Fnt*) ecalloc(1, sizeof(Fnt));
 	font->xfont = xfont;
 	font->pattern = pattern;
-	font->h = xfont->ascent + xfont->descent;
+
+    if (xfont != NULL) {
+	    font->h = xfont->ascent + xfont->descent; // Getting "potential null pointer deref" 
+    }
+    else {
+        return NULL;
+    }
+    
 	font->dpy = drw->dpy;
 
 	return font;
